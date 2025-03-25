@@ -1,0 +1,11 @@
+[MUSIC] Welcome to week four of the Estimation and Learning module in
+the Robotics specialization. This week, we'll look at localization
+algorithms for robotics. First of all, we'll explore how robots
+represent the pose, that is where they're located and how they can estimate this
+over time using a localization algorithm. Then, we'll see how, given a map,
+we can use the information in the map to help us build up this
+registration of the pose to the map. Finally, we'll explore a canonical
+algorithm called the particle filter which robots can use to estimate their
+localization information using sensors. In summary, this week you will learn how
+robots can keep track of where they are in space and time using these particle filter
+algorithms to represent their uncertainty.

@@ -1,0 +1,60 @@
+This week we will learn about
+self-localization techniques including the particle filter. In this first lecture,
+we will consider models for odometry as a first order
+approximation to the robot's location. As in your car, where the odometer
+records how many miles you have traveled, odometry provides a measurement
+of how far the robot has moved. Odometry is just one method of finding
+the robot's location in the world. If we look at a typical
+application of localization, car navigation,
+we see several ways to find location. Information sources include GPS, global positioning system, cellular
+networks, and Wi-Fi access points. Each of these sources, however, have certain levels of noise
+that lead to various levels of accuracy. Driverless cars, for instance, will need better than 3.5 meters
+of accuracy that the GPS provides. That error is the difference between
+occupying the sidewalk and the road. The previous sources represent global
+knowledge of position, exact coordinates. Odometry and other sources of
+information can augment the global localization sources with local knowledge. How have they changed coordinates? These sources of information are more
+precise, giving centimeter accuracy. However, integrating sources,
+like encoders and gyroscopes, over time can lead to drift. This is due to the accumulation
+of errors in time. Errors from slippage of the wheels
+deceive the encoder for instance. Other local sensors like
+laser scanners and color and depth cameras can help
+to correct these errors. We will see how this incorporation
+happens later in the week. Odometry updates start
+with modeling the robot. Different robots, such as humanoids or aerial vehicles,
+will require different models. In our case, we will model
+a skid steer four-wheeled robot. The odometry measurements come
+from ticks from the encoder that measure how much the wheels
+have rotated in a given timeframe. These ticks can be mapped into translation
+and rotation of the body of the robot. First, let's explore the rotation
+odometry calculation. With a skid steer robot, the left and right sets of wheels
+are controlled independently. When turning,
+these two sides form the inner and outer radii of circles that
+share the same center. Coupled with the knowledge of
+how wide the robot vehicle is, we can determine a change in angle
+based on these encoder ticks. First, we want to translate motor ticks
+into meters traveled by the inner and outer wheels along their respective arcs. This conversion requires
+knowledge of the wheel sizes. Here, these measurements in
+meters are denoted eo and ei. The inner and outer arcs are known, but they also share the same
+angle of rotation. With knowledge of the width of the robot, we can use the difference in arcments
+to calculate the shared angle data. Next, we will consider
+the translation of the robot. Conveniently, the translation requires
+knowledge of the rotation that we have already calculated. In measuring translation, we can form a
+triangle with the known angle of rotation. We then can average
+the change in position for both the inner and outer wheel sets to
+find the change in the x direction. The change in the y direction
+requires a similar methodology. For small movements, this is a good
+approximation for the translation. Unfortunately, the encoder measurements
+can be noisy due to wheel slippage. Angular estimates then propagate
+errors into the translation estimates. One solution to this problem
+is to utilize the gyroscope to find a more precise
+measurement of angular change. For a small number of time steps,
+the gyroscope can be very accurate. Thus, angular odometry is measured
+solely by the rate of change observed by the gyro,
+integrated over time. This measurement aids in
+translation calculations as well. This simple odometry
+approach to localization requires a frame of reference for
+where the robot began its trip. Local measurements from the encoders and
+gyroscopes still provide noisy estimates. So we want to include more
+measurements to correct errors. The next sections will discuss using
+maps to aid in localization correction, as well as ways to probabilistically
+define our localization state.

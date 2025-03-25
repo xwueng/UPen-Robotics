@@ -1,0 +1,51 @@
+In this lecture, we will talk about
+a probabilistic state estimation technique using a sampling-based distribution
+representation known as the Particle Filter. Instead of a fully defined function,
+the Particle Filter represents a distribution with a set of samples,
+referred to as particles. These particles represent
+the distribution. The statistics of the samples match
+the statistics of the distribution, such as the mean or standard deviation. However, they can be more
+complicated metrics as well. In this way, there are no parameters
+as were seen in the mean and covariances of the Gaussian models. Instead, a full population is tracked. In essence, the particle filter
+population represents a mixture of Gaussian distributions that
+we have seen in the first week. Here, the variance will go to 0. With 0 variance, the Gaussian distributions
+become Dirac Delta functions. Initially, a set of particles
+represent the underlying belief state. Each particle is a pair of the pose and
+the weight of that pose. This is similar to representing
+a probability function where the weight is the probability of
+that pose in the underlying distribution. Here, darker colors represent
+higher weights, and lighter colors represent lower weights. Just like the Kalman filter, a motion model will move
+the underlying distribution. Here, the particles move based on odometry
+measurements taken from the robot. A companion uncertainty model captures
+the noise underlying the motion model. For instance, this could be wheel slip or
+friction changes. In the particle filter,
+where we do not track the motion model in explicit parameters, we add sampled
+noise from the motion noise model. In this case, we use a Gaussian distribution to model
+noise with 0 mean and non-0 covariance. Noise is uniquely added to each particle. So separate samples are made for
+each particle. After the noise is added, the dispersion of the particles captures
+the uncertainty due to movement. Like the Kalman filter,
+we can use a separate set of observations to constrain our noise and
+update our belief distribution. Here we will leverage
+the LIDAR correlation from previous lectures
+on map registration. We will update the weights of the
+particles to reflect the correlation score from the map registration by utilizing
+the current weights as a prior belief. The new set of particles captures
+the distribution after odometry and sensor measurements. However, this may not be the optimal
+set to represent the distribution. Here, you can see that only a few
+particles have significant weights. Most of the particles
+are lightly colored and do not give much information
+about the distribution. To make the set of particles
+more accurately represent the belief state distribution, we check
+the number of effective particles. The number of effective particles
+acts as a criterion for when to resample particles. This resampling process provides
+a probabilistically motivated way to prune out lower weighted particles. With the set of large and small weights, using the cumulative
+probability function can aid in sampling. With normalized weights,
+the sum of the weights is 1, and can be represented as a monotonically
+increasing cumulative function. We sample a number ,uniformly,
+between 0 and 1 of the cumulative range and
+find which weight includes that number. The particles with the indices
+found in the resampling approach become the new set of particles to be
+fed into the next odometry update. Particles may be duplicated, but the odometry noise will
+differentiate these particles. This approach provides a good way to
+approach a multi-nodal belief state distribution and
+non-linear effects of your motion model.

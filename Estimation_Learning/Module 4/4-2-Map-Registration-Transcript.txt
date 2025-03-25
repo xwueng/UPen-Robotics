@@ -1,0 +1,66 @@
+In this lecture, we will consider
+correlation based matching strategies for location a robot on a map
+given laser range data. This map registration process
+provides a very precise complement to odometry based localization. First we should introduced
+the LIDAR depth sensor. LIDAR stands for
+light detection and ranging and it provides distance measurements. Often engineered in a laser scanner
+to provide two dimensional data. The laser scanner we will
+model in this lecture takes depth measurements
+in polar coordinates, where a continuous distance reading
+r is made at discrete angles theta. Here, theta encompasses 270 degrees,
+not a full circle. The laser scanner can only
+see 10 to 30 meters away. In this range restriction,
+means that distance measurements showing here is black dots, can only
+be found within the area in green. Thus, due to the rays generating from
+a single point and the limited range, the robot can only see the dotted
+lines and not the lines in brown. Just as in the previous lecture,
+a two dimensional occupancy grid map will be used in localization,
+where a light colored cell represents high probability of an obstacle and a dark
+colored cell present a low probability. The cells here are meant
+to replicate the laser skin shown in the previous slide when the robot
+is approaching a corner in a hallway. Because the robot lives in a finite grid
+world the grid must sometimes be expanded as the robot can escape the boundaries. In this case, the map representation
+should increase in size as the robot turns and travels on the corridor
+shown in the top left of this map or else information will be lost. In addition to mapping the laser
+data discussed in week 3, we can access map data and try to find the robot
+pose in the map given the laser data. The complimentary stages of mapping and
+localization when performed together are known as SLAM,
+simultaneous localization and mapping, which is a major
+research topic in robotics. In the localization problem we
+have two sets of information. First, the occupancy grid map
+provides a grounds truth knowledge of what the robot should expect
+to observe in the world. Second, the set of
+lighter scan measurements provides information on what the robot
+is observing at the current time. The lighter scan measurements
+must be discretized according to the map representation,
+as discussed in week three, in order to be compared to
+the information from the occupancy map. With these two pieces of information
+the goal is to find the best robot pose on the map that explains
+the measured observations. Searching over all possible poses
+of the robot can be difficult. But based on the odometry information
+discussed in the last lecture, we have some tricks to
+make the search easier. We can constrain the search
+to a limited number of poses based on odometry information. Because we track the robot over time, we
+have the last known position of the robot and odometry information on how
+far the robot most likely moved. Thus, the most likely pose for the robot
+is now given a new set of laser data, is probably close to where
+the odometry predicts the robot to be. This prediction means that we can refine
+our search to poses near the prediction and be more confident in
+the validity of our search results. We measure each pose p in the search
+based on a map registration metric. One metric is to consider the sum of
+the map values m, at coordinates x and y, where the laser returns r, hit. This correlation metric can be modified
+to suit the application at hand. In our case, the value of our map
+cell will be a log odds ratio, so laser returns that are seen at a map
+location with high probability of occupancy will strongly increase
+the registration in the metric score. Laser returns with map locations known as
+free cells will decrease the metric score. Additionally, the correlation can
+be scaled where returns from far distances affect the metric calculation
+less than nearby the laser returns. We register the robot on the map, at the pose that maximizes
+the registration metric. Thus, when the odometry is calculated, it uses this pose to predict a new
+position of the robot, in time. In addition to considering merely the
+laser returns, we can consider points for the laser returns penetrated. This calculation can further
+corroborate our map registration. It requires considerably
+more computation however. To capture pose uncertainty using
+a simple Gaussian on position and angle may not provide a feasible approach. In the next lecture, we will present
+a pose filter that can capture bi-modal uncertainty and non-linear models and
+a computationally tractable way.
